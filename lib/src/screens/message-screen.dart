@@ -5,6 +5,8 @@ class MessageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments ?? 'No data';
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Push Notifications'),
@@ -13,7 +15,7 @@ class MessageScreen extends StatelessWidget {
       body: Container(
         child: Center(
           child: Text(
-            'message screen',
+            'El producto es: $args',
             style: TextStyle(fontSize: 30, color: Colors.black38),
           ),
         ),

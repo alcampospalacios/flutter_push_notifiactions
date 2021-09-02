@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -5,16 +7,25 @@ class FirebaseNotificationService {
   static FirebaseMessaging messaging = FirebaseMessaging.instance;
   static String? token;
 
+  // to subscribe in main app level
+  static StreamController<String> _notificationStreamController =
+      new StreamController.broadcast();
+  static Stream<String> get notificationStream =>
+      _notificationStreamController.stream;
+
   static Future _onBackgroundHandler(RemoteMessage message) async {
-    print('onBackgroundHandler ${message.messageId}');
+    // print('onBackgroundHandler ${message.messageId}');
+    _notificationStreamController.add(message.data['product'] ?? 'No title');
   }
 
   static Future _onMessageHandler(RemoteMessage message) async {
-    print('onMessageHandler ${message.messageId}');
+    // print('onMessageHandler ${message.messageId}');
+    _notificationStreamController.add(message.data['product'] ?? 'No title');
   }
 
   static Future _onMessageOpenHandler(RemoteMessage message) async {
-    print('onMessageOpenHandler ${message.messageId}');
+    // print('onMessageOpenHandler ${message.messageId}');
+    _notificationStreamController.add(message.data['product'] ?? 'No title');
   }
 
   static Future initializeApp() async {
@@ -27,6 +38,10 @@ class FirebaseNotificationService {
     FirebaseMessaging.onBackgroundMessage(_onBackgroundHandler);
     FirebaseMessaging.onMessage.listen(_onMessageHandler);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenHandler);
+  }
+
+  static closeStream() {
+    _notificationStreamController.close();
   }
 }
 
